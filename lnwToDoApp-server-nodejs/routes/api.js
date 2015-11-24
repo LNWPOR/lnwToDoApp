@@ -50,30 +50,56 @@ router.get('/users/:id', function(req, res) {
     });
 });
 
-router.get('/lists', function(req, res) {
+router.route('/lists')
+
+  .get( function(req, res) {
     List.find(function(err, lists ) {
         if (err)
             res.send(err)
-        res.json(List);
+        res.json(lists);
     });
-});
-
-router.post('/lists' , function(req, res) {
-  var list = new List(req.body);
-  list.save(function(err) {
-    if (err) {
-      return res.send(err);
-    }
+  })
+  
+  .post( function(req, res) {
+    var list = new List(req.body);
+    list.save(function(err) {
+      if (err) {
+        return res.send(err);
+      }
+    });
   });
-});
 
-router.get('/lists/:id', function(req, res) {
+router.route('/lists/:id')
+  .get(function(req, res) {
     List.findOne({ _id: req.params.id }, function(err, list) {
       if (err) return console.error(err);
         res.json(list);
     });
-});
+  })
+  
+  .put(function(req,res){
+    List.findOne({ _id: req.params.id }, function(err, list) {
+      if (err) {
+        return res.send(err);
+      }
 
+      list.description = req.params.description;
 
+      // save the movie
+      list.save(function(err) {
+        if (err) {
+          return res.send(err);
+      }
+      });
+    });
+  })
+
+  .delete( function(req, res) {
+    List.remove({_id: req.params.id}, function(err,list ) {
+      if (err) {
+        return res.send(err);
+      }
+    });
+  });
 
 module.exports = router;
