@@ -1,10 +1,11 @@
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
-    Users = require('../models/users'),
+    User = require('../models/user'),
+    List = require('../models/list')
     
-router.post('/users/register', function(req, res) {
-  Users.register(new Users({ username: req.body.username }), req.body.password, function(err, account) {
+router.post('/user/register', function(req, res) {
+  User.register(new User({ username: req.body.username }), req.body.password, function(err, account) {
     if (err) {
       return res.status(500).json({err: err})
     }
@@ -14,7 +15,7 @@ router.post('/users/register', function(req, res) {
   });
 });
 
-router.post('/users/login', function(req, res, next) {
+router.post('/user/login', function(req, res, next) {
   passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err) }
     if (!user) {
@@ -29,23 +30,32 @@ router.post('/users/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.get('/users/logout', function(req, res) {
+router.get('/user/logout', function(req, res) {
   req.logout();
   res.status(200).json({status: 'Bye!'})
 });
 
-router.get('/users', function(req, res) {
-    Users.find(function(err, Users ) {
+router.get('/user', function(req, res) {
+    User.find(function(err, User ) {
         if (err)
             res.send(err)
-        res.json(Users);
+        res.json(User);
+        console.log(User);
     });
 });
 
-router.get('/users/:username', function(req, res) {
-    Users.findOne({ username: req.params.username }, function(err, Users) {
+router.get('/user/:username', function(req, res) {
+    User.findOne({ username: req.params.username }, function(err, User) {
       if (err) return console.error(err);
-        res.json(Users);
+        res.json(User);
+    });
+});
+
+router.get('/list', function(req, res) {
+    List.find(function(err, List ) {
+        if (err)
+            res.send(err)
+        res.json(List);
     });
 });
 
