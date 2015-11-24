@@ -1,11 +1,11 @@
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
-    Users = require('../models/users'),
-    Lists = require('../models/lists')
+    User = require('../models/user'),
+    List = require('../models/list')
     
-router.post('/user/register', function(req, res) {
-  Users.register(new Users({ username: req.body.username }), req.body.password, function(err, account) {
+router.post('/users/register', function(req, res) {
+  User.register(new User({ username: req.body.username }), req.body.password, function(err, account) {
     if (err) {
       return res.status(500).json({err: err})
     }
@@ -16,12 +16,12 @@ router.post('/user/register', function(req, res) {
 });
 
 router.post('/users/login', function(req, res, next) {
-  passport.authenticate('local', function(err, users, info) {
+  passport.authenticate('local', function(err, user, info) {
     if (err) { return next(err) }
-    if (!users) {
+    if (!user) {
       return res.status(401).json({err: info})
     }
-    req.logIn(users, function(err) {
+    req.logIn(user, function(err) {
       if (err) {
         return res.status(500).json({err: 'Could not log in user'})
       }
@@ -36,27 +36,44 @@ router.get('/users/logout', function(req, res) {
 });
 
 router.get('/users', function(req, res) {
-    Users.find(function(err, Users ) {
+    User.find(function(err, users ) {
         if (err)
             res.send(err)
-        res.json(Users);
+        res.json(users);
     });
 });
 
-router.get('/users/:username', function(req, res) {
-    Users.findOne({ username: req.params.username }, function(err, Users) {
+router.get('/users/:id', function(req, res) {
+    User.findOne({ _id: req.params.id }, function(err, user) {
       if (err) return console.error(err);
-        res.json(Users);
+        res.json(user);
     });
 });
 
 router.get('/lists', function(req, res) {
-    Lists.find(function(err, List ) {
+    List.find(function(err, lists ) {
         if (err)
             res.send(err)
         res.json(List);
     });
 });
+
+router.post('/lists' , function(req, res) {
+  var list = new List(req.body);
+  list.save(function(err) {
+    if (err) {
+      return res.send(err);
+    }
+  });
+});
+
+router.get('/lists/:id', function(req, res) {
+    List.findOne({ _id: req.params.id }, function(err, list) {
+      if (err) return console.error(err);
+        res.json(list);
+    });
+});
+
 
 
 module.exports = router;

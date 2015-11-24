@@ -14,7 +14,7 @@ mongoose.connect('mongodb://LNWPOR:lnwpor@ds057204.mongolab.com:57204/lnwtodoapp
 // mongoose.connect('mongodb://LNWPOR:lnwpor@ds051553.mongolab.com:51553/hungry-joe');
 
 // user schema/model
-var Users = require('./models/users');
+var User = require('./models/user');
 
 // create instance of express
 var app = express();
@@ -37,9 +37,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // configure passport
-passport.use(new localStrategy(Users.authenticate()));
-passport.serializeUser(Users.serializeUser());
-passport.deserializeUser(Users.deserializeUser());
+passport.use(new localStrategy(User.authenticate()));
+passport.serializeUser(User.serializeUser());
+passport.deserializeUser(User.deserializeUser());
 
 //Cross Origin Request Sharing
 app.use(function(req, res, next) {
