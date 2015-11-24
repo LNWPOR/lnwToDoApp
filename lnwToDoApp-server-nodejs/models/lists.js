@@ -1,10 +1,10 @@
 var mongoose = require('mongoose'),
     Schema = mongoose.Schema
     
-var List = new Schema({
+var Lists = new Schema({
         description : String,
         ownerID : String
         // date : {type: Date, default: Date.now()}
 });    
     
-module.exports = mongoose.model('list', List);
+module.exports = mongoose.model('lists', Lists);

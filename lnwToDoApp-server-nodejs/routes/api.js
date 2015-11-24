@@ -1,11 +1,11 @@
 var express = require('express'),
     router = express.Router(),
     passport = require('passport'),
-    User = require('../models/user'),
-    List = require('../models/list')
+    Users = require('../models/users'),
+    Lists = require('../models/lists')
     
 router.post('/user/register', function(req, res) {
-  User.register(new User({ username: req.body.username }), req.body.password, function(err, account) {
+  Users.register(new Users({ username: req.body.username }), req.body.password, function(err, account) {
     if (err) {
       return res.status(500).json({err: err})
     }
@@ -15,13 +15,13 @@ router.post('/user/register', function(req, res) {
   });
 });
 
-router.post('/user/login', function(req, res, next) {
-  passport.authenticate('local', function(err, user, info) {
+router.post('/users/login', function(req, res, next) {
+  passport.authenticate('local', function(err, users, info) {
     if (err) { return next(err) }
-    if (!user) {
+    if (!users) {
       return res.status(401).json({err: info})
     }
-    req.logIn(user, function(err) {
+    req.logIn(users, function(err) {
       if (err) {
         return res.status(500).json({err: 'Could not log in user'})
       }
@@ -30,29 +30,29 @@ router.post('/user/login', function(req, res, next) {
   })(req, res, next);
 });
 
-router.get('/user/logout', function(req, res) {
+router.get('/users/logout', function(req, res) {
   req.logout();
   res.status(200).json({status: 'Bye!'})
 });
 
-router.get('/user', function(req, res) {
-    User.find(function(err, User ) {
+router.get('/users', function(req, res) {
+    Users.find(function(err, Users ) {
         if (err)
             res.send(err)
-        res.json(User);
-        console.log(User);
+        res.json(Users);
+        console.log(Users);
     });
 });
 
-router.get('/user/:username', function(req, res) {
-    User.findOne({ username: req.params.username }, function(err, User) {
+router.get('/users/:username', function(req, res) {
+    Users.findOne({ username: req.params.username }, function(err, Users) {
       if (err) return console.error(err);
-        res.json(User);
+        res.json(Users);
     });
 });
 
-router.get('/list', function(req, res) {
-    List.find(function(err, List ) {
+router.get('/lists', function(req, res) {
+    Lists.find(function(err, List ) {
         if (err)
             res.send(err)
         res.json(List);

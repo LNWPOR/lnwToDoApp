@@ -10,11 +10,11 @@ var express = require('express'),
     passport = require('passport'),
     localStrategy = require('passport-local' ).Strategy;
 
-// mongoose.connect('mongodb://LNWPOR:lnwpor@ds057204.mongolab.com:57204/lnwtodoapp');
-mongoose.connect('mongodb://LNWPOR:lnwpor@ds051553.mongolab.com:51553/hungry-joe');
+mongoose.connect('mongodb://LNWPOR:lnwpor@ds057204.mongolab.com:57204/lnwtodoapp');
+// mongoose.connect('mongodb://LNWPOR:lnwpor@ds051553.mongolab.com:51553/hungry-joe');
 
 // user schema/model
-var User = require('./models/user');
+var Users = require('./models/users');
 
 // create instance of express
 var app = express();
@@ -37,9 +37,9 @@ app.use(passport.initialize());
 app.use(passport.session());
 
 // configure passport
-passport.use(new localStrategy(User.authenticate()));
-passport.serializeUser(User.serializeUser());
-passport.deserializeUser(User.deserializeUser());
+passport.use(new localStrategy(Users.authenticate()));
+passport.serializeUser(Users.serializeUser());
+passport.deserializeUser(Users.deserializeUser());
 
 //Cross Origin Request Sharing
 app.use(function(req, res, next) {
